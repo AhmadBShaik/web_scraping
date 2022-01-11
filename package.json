@@ -1,0 +1,19 @@
+{
+  "name": "web_scraping",
+  "version": "1.0.0",
+  "description": "Scrape Websites",
+  "main": "dist/index.js",
+  "repository": "https://github.com/AhmadBShaik/web_scraping",
+  "author": "AhmadBShaik",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^17.0.8",
+    "typescript": "^4.5.4"
+  },
+  "dependencies": {
+    "puppeteer": "^13.0.1"
+  },
+  "scripts": {
+    "scrape":"tsc && node dist/index.js"
+  }
+}
