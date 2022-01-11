@@ -14,9 +14,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const puppeteer_1 = __importDefault(require("puppeteer"));
 (() => __awaiter(void 0, void 0, void 0, function* () {
-    const browser = yield puppeteer_1.default.launch();
+    const browser = yield puppeteer_1.default.launch({ headless: false, executablePath: "/usr/lib64/chromium-browser/chromium-browser.sh" });
     const page = yield browser.newPage();
-    yield page.goto('https://ahmadbshaik.github.io');
-    yield page.screenshot({ path: 'mypic.png' });
-    yield browser.close();
+    yield page.goto('https://ahmadbshaik.github.io', {
+        waitUntil: 'networkidle0',
+    });
+    // networkidle0 is used for Single Page Applications that load resources with fetch requests.
+    // networkidle1 is used to do long-polling or any other side activity.
+    // screenshots the webpage
+    // await page.screenshot({ path: 'my_portfolio.png' });
+    // convert webpage into pdf
+    // await page.pdf({ path: 'ahmad.pdf', format: 'a4'})
+    const dimensions = yield page.evaluate(() => {
+        return {
+            width: document.documentElement.clientWidth,
+            height: document.documentElement.clientHeight,
+            deviceScaleFactor: window.devicePixelRatio
+        };
+    });
+    console.log({ dimensions });
+    // await browser.close();
 }))();
