@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const puppeteer_1 = __importDefault(require("puppeteer"));
+const fs_1 = __importDefault(require("fs"));
 /*
 Getting data from internet
 
@@ -113,22 +114,22 @@ Getting data from internet
             .filter(e => e !== null)
             .filter(e => !(e === null || e === void 0 ? void 0 : e.includes("github.io")) && e !== "");
     });
-    console.log(titles);
-    console.log(projectLinks);
-    for (let i = 0; i < titles.length; i++) {
-        console.log(titles[i]);
-    }
-    for (let i = 0; i < projectLinks.length; i++) {
-        console.log(projectLinks[i]);
-    }
+    // console.log(titles);
+    // console.log(projectLinks);
+    // for(let i = 0; i < titles.length; i++){
+    //     console.log(titles[i]);
+    // }
+    // for(let i = 0; i < projectLinks.length; i++){
+    //     console.log(projectLinks[i]);
+    // }
     // output object
-    // let output: {[key: string]: string} = {}
-    const output = [];
+    let output = {};
     for (let i = 0; i < titles.length; i++) {
-        output.push({
-            "a": "b"
-        });
+        if (titles[i] !== null && projectLinks[i] !== null) {
+            output[titles[i]] = projectLinks[i];
+        }
     }
-    // console.log(typeof projectLinks)
+    console.log(output);
+    fs_1.default.writeFileSync('./output.json', JSON.stringify(output));
     browser.close();
 }))();

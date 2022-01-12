@@ -110,28 +110,30 @@ Getting data from internet
             .filter(e => !e?.includes("github.io") && e !== "");
     });
     
-    console.log(titles);
+    // console.log(titles);
     
     
-    console.log(projectLinks);
+    // console.log(projectLinks);
     
-    for(let i = 0; i < titles.length; i++){
-        console.log(titles[i]);
-    }
-    for(let i = 0; i < projectLinks.length; i++){
-        console.log(projectLinks[i]);
-    }
+    // for(let i = 0; i < titles.length; i++){
+    //     console.log(titles[i]);
+    // }
+    // for(let i = 0; i < projectLinks.length; i++){
+    //     console.log(projectLinks[i]);
+    // }
 
     // output object
     let output: {[key: string]: string} = {}
     for(let i = 0; i < titles.length; i++){
-        if(titles[i] !== null){
-            output[titles[i]] = projectLinks[i] // Type 'null' cannot be used as an index type.
+        if(titles[i] !== null && projectLinks[i] !== null){
+            output[titles[i]!] = projectLinks[i]!
         }
     }
 
-    // console.log(typeof projectLinks)
-    
-
+    console.log(output)
+    fs.writeFileSync(
+        './output.json',
+        JSON.stringify(output)
+        )
     browser.close();
 })();
