@@ -1,12 +1,20 @@
+import { link } from "fs";
 import puppeteer from "puppeteer";
+/*
+Getting data from internet
 
 (async () => {
     // `executable path` is path to browser in our local machine
-    const browser = await puppeteer.launch({ headless:false, executablePath:"/usr/lib64/chromium-browser/chromium-browser.sh" });
+    const browser = await puppeteer.launch({ 
+        headless: true, 
+        // executablePath: "/usr/lib64/chromium-browser/chromium-browser.sh", 
+        defaultViewport: null 
+    });
+    
     const page = await browser.newPage();
 
     await page.goto('https://ahmadbshaik.github.io', {
-        waitUntil: 'networkidle0',
+        waitUntil: 'domcontentloaded',
     });
     
     // networkidle0 is used for Single Page Applications that load resources with fetch requests.
@@ -27,6 +35,50 @@ import puppeteer from "puppeteer";
        };
     });
 
-    console.log({ dimensions })
-    // await browser.close();
+    // console.log({ dimensions })
+    
+    const myNameElement = await page.$('#name');
+    if(myNameElement){
+        const myName = await page.evaluate(element => element.textContent, myNameElement);
+        console.log(`My name is ${myName} Shaik`);
+    }
+
+    const containerElement = await page.$('.container');
+    if(containerElement){
+        const content = await page.evaluate(element => element.textContent, containerElement);
+        console.log(content);
+    }
+
+    const containerElements = await page.$('.container > a');
+    if(containerElements){
+        const content = await page.evaluate(element => element.textContent, containerElements);
+        console.log(content);
+    }
+
+    await browser.close();
 })();
+
+*/
+
+
+// Access local web page
+(async () => {
+
+    const browser = await puppeteer.launch({
+        // headless: false
+    });
+
+    const page = await browser.newPage();
+    await page.goto('http://127.0.0.1:5500/index.html',{
+        waitUntil:'domcontentloaded'
+    });
+
+    const a = await page.$$eval('header > nav > a', (links) => {
+        return links.map((e) => e.getAttribute("href"))  
+    })
+
+    console.log(a);
+
+    browser.close();
+})();
+
