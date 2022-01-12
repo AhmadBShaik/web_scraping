@@ -1,5 +1,6 @@
-import { link } from "fs";
 import puppeteer from "puppeteer";
+import fs from 'fs';
+
 /*
 Getting data from internet
 
@@ -60,7 +61,7 @@ Getting data from internet
 
 */
 
-
+/*
 // Access local web page
 (async () => {
 
@@ -82,3 +83,45 @@ Getting data from internet
     browser.close();
 })();
 
+*/
+
+
+// basic data scraping from my portfolio
+(async () => {
+
+    const browser = await puppeteer.launch();
+
+    const page = await browser.newPage();
+    await page.goto('https://ahmadbshaik.github.io',{
+        waitUntil:'domcontentloaded'
+    });
+
+
+    // titles of projects from my portfolio
+    const titles = await page.$$eval('div.border-card.inner-flex-item > h3', (headings) => {
+
+        return headings.map((e) => e.textContent);
+    });
+    
+    // github source code links to github repositories
+    const projectLinks = await page.$$eval('div.border-card.inner-flex-item > a', (links) => {
+        return links.map((e) => e.getAttribute("href")).filter(e => !e?.includes("github.io") && e!=="");
+    })
+    
+    console.log(titles);
+    
+    
+    console.log(projectLinks);
+    
+    for(let i = 0; i < titles.length; i++){
+        console.log(titles[i]);
+    }
+    for(let i = 0; i < projectLinks.length; i++){
+        console.log(projectLinks[i]);
+    }
+
+    // output object
+    let ouput = {}
+    
+    browser.close();
+})();

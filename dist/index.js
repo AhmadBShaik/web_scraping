@@ -72,18 +72,51 @@ Getting data from internet
 })();
 
 */
+/*
 // Access local web page
-(() => __awaiter(void 0, void 0, void 0, function* () {
-    const browser = yield puppeteer_1.default.launch({
-    // headless: false
+(async () => {
+
+    const browser = await puppeteer.launch({
+        // headless: false
     });
+
+    const page = await browser.newPage();
+    await page.goto('http://127.0.0.1:5500/index.html',{
+        waitUntil:'domcontentloaded'
+    });
+
+    const a = await page.$$eval('header > nav > a', (links) => {
+        return links.map((e) => e.getAttribute("href"))
+    })
+
+    console.log(a);
+
+    browser.close();
+})();
+
+*/
+// basic data scraping from my portfolio
+(() => __awaiter(void 0, void 0, void 0, function* () {
+    const browser = yield puppeteer_1.default.launch();
     const page = yield browser.newPage();
-    yield page.goto('http://127.0.0.1:5500/index.html', {
+    yield page.goto('https://ahmadbshaik.github.io', {
         waitUntil: 'domcontentloaded'
     });
-    const a = yield page.$$eval('header > nav > a', (links) => {
-        return links.map((e) => e.getAttribute("href"));
+    // titles of projects from my portfolio
+    const titles = yield page.$$eval('div.border-card.inner-flex-item > h3', (headings) => {
+        return headings.map((e) => e.textContent);
     });
-    console.log(a);
+    // github source code links to github repositories
+    const projectLinks = yield page.$$eval('div.border-card.inner-flex-item > a', (links) => {
+        return links.map((e) => e.getAttribute("href")).filter(e => !(e === null || e === void 0 ? void 0 : e.includes("github.io")) && e !== "");
+    });
+    console.log(titles);
+    console.log(projectLinks);
+    for (let i = 0; i < titles.length; i++) {
+        console.log(titles[i]);
+    }
+    for (let i = 0; i < projectLinks.length; i++) {
+        console.log(projectLinks[i]);
+    }
     browser.close();
 }))();
