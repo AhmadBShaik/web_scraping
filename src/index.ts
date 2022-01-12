@@ -99,14 +99,16 @@ Getting data from internet
 
     // titles of projects from my portfolio
     const titles = await page.$$eval('div.border-card.inner-flex-item > h3', (headings) => {
-
-        return headings.map((e) => e.textContent);
+        return headings.map((e) => e.textContent).filter(e => e !== null);
     });
     
     // github source code links to github repositories
     const projectLinks = await page.$$eval('div.border-card.inner-flex-item > a', (links) => {
-        return links.map((e) => e.getAttribute("href")).filter(e => !e?.includes("github.io") && e!=="");
-    })
+        return links
+            .map((e) => e.getAttribute("href"))
+            .filter(e => e !== null)
+            .filter(e => !e?.includes("github.io") && e !== "");
+    });
     
     console.log(titles);
     
@@ -121,7 +123,15 @@ Getting data from internet
     }
 
     // output object
-    let ouput = {}
+    let output: {[key: string]: string} = {}
+    for(let i = 0; i < titles.length; i++){
+        if(titles[i] !== null){
+            output[titles[i]] = projectLinks[i] // Type 'null' cannot be used as an index type.
+        }
+    }
+
+    // console.log(typeof projectLinks)
     
+
     browser.close();
 })();

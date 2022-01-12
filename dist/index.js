@@ -104,11 +104,14 @@ Getting data from internet
     });
     // titles of projects from my portfolio
     const titles = yield page.$$eval('div.border-card.inner-flex-item > h3', (headings) => {
-        return headings.map((e) => e.textContent);
+        return headings.map((e) => e.textContent).filter(e => e !== null);
     });
     // github source code links to github repositories
     const projectLinks = yield page.$$eval('div.border-card.inner-flex-item > a', (links) => {
-        return links.map((e) => e.getAttribute("href")).filter(e => !(e === null || e === void 0 ? void 0 : e.includes("github.io")) && e !== "");
+        return links
+            .map((e) => e.getAttribute("href"))
+            .filter(e => e !== null)
+            .filter(e => !(e === null || e === void 0 ? void 0 : e.includes("github.io")) && e !== "");
     });
     console.log(titles);
     console.log(projectLinks);
@@ -118,5 +121,14 @@ Getting data from internet
     for (let i = 0; i < projectLinks.length; i++) {
         console.log(projectLinks[i]);
     }
+    // output object
+    // let output: {[key: string]: string} = {}
+    const output = [];
+    for (let i = 0; i < titles.length; i++) {
+        output.push({
+            "a": "b"
+        });
+    }
+    // console.log(typeof projectLinks)
     browser.close();
 }))();
